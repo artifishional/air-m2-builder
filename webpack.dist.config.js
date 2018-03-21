@@ -1,13 +1,12 @@
 const path = require("path");
-const {name} = require("./../../package.json");
-const after = require("./src/resolver");
-
-const main = "main.js";
+const {name, main} = require("./../../package.json");
+const input = path.resolve(__dirname, `./../../${main}`);
 
 module.exports = {
+    mode: "development",
     devtool: "source-map",
     entry: {
-        'main': [path.resolve(__dirname, './src/dist.js')]
+        'main': [input]
     },
     output: {
         path: path.resolve(__dirname, './dist/'),
@@ -23,13 +22,6 @@ module.exports = {
                 }
             }
         ]
-    },
-    devServer: {
-        publicPath: "/m2units/",
-        port: 9000,
-        host: "0.0.0.0",
-        contentBase: './dist',
-        after
     },
     watch: true
 };

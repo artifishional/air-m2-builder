@@ -1,23 +1,26 @@
 const path = require("path");
-const {m2units} = require("./../../package.json");
+const {m2units} = require("./../../../package.json");
 const fs = require("fs");
 const webpack = require("webpack");
 const {execSync} = require('child_process');
 
-module.export = function after(app) {
+module.exports = function after(app) {
     app.get("/m2units/*", function(req, res) {
 
         const name = req.params[0].replace( ".js", "" );
 
-        const output = path.resolve(__dirname, `./../${name}/m2unit/`);
-        const input = path.resolve(__dirname, `./../${name}/src/index.js`);
+        const output = path.resolve(__dirname, `./../../../node_modules/${name}/m2unit/`);
+        const input = path.resolve(__dirname, `./../../../node_modules/${name}/src/index.js`);
 
-        const module = path.resolve(__dirname, `./../${name}`);
+        const module = path.resolve(__dirname, `./../../../node_modules/${name}`);
 
         if(!fs.existsSync(module)) {
             const unit = m2units.hasOwnProperty( name );
             if(!unit) throw `Requested unit "${name}" is not among m2units`;
-            execSync(`npm install ${m2units[name]} --no-save`, { cwd: "../" });
+
+            console.log(`pre install ${m2units[name]}`, __dirname);
+
+            execSync(`npm install ${m2units[name]} --no-save` );
 
             const compiler = webpack({
                 entry: {

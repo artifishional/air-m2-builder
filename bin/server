@@ -1,5 +1,24 @@
 #!/usr/bin/env node
 'use strict';
 
-const {execSync} = require('child_process');
-execSync( "npm run start", { cwd: "./node_modules/air-m2-builder/" } );
+const WebpackDevServer = require("webpack-dev-server");
+const Webpack = require('webpack');
+const webpackConfig = require('./../webpack.dist.config.js');
+const path = require("path");
+const after = require("../src/resolver");
+
+const compiler = Webpack(webpackConfig);
+
+const server = new WebpackDevServer(compiler, {
+    headers: { "Access-Control-Allow-Origin": "*" },
+    disableHostCheck: true,
+    stats: { colors: true, },
+    contentBase: path.resolve(__dirname, './dist'),
+    publicPath: path.resolve(__dirname, `/m2units`),
+    hot: true,
+    inline: true,
+    after,
+    watchContentBase: true
+}).listen(9000, "0.0.0.0", function(err) {
+    console.log("Starting server on http://localhost: " + 9000);
+});
