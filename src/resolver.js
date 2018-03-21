@@ -18,10 +18,43 @@ module.exports = function after(app) {
             const unit = m2units.hasOwnProperty( name );
             if(!unit) throw `Requested unit "${name}" is not among m2units`;
 
-            console.log(`pre install ${m2units[name]}`, __dirname);
+            console.log(`pre install "${m2units[name]}"`, __dirname);
 
             execSync(`npm install ${m2units[name]} --no-save` );
 
+
+        }
+
+
+        /*
+                todo needs sync after webpack builder started (Observable)
+                catche.createIfNotExists(name) =>
+                new Observable( function(emt) {
+                    compiler.run((err, stats) => {
+                        if(err) throw err;
+                        emt();
+                    });
+                } );
+
+                on( () => {
+
+                    fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
+                        if (err) throw err;
+                        res.send(data);
+                    });
+
+                } );
+
+        */
+
+        if(fs.existsSync(`${output}`)) {
+            fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
+                if (err) throw err;
+                res.send(data);
+            });
+        }
+        else {
+            console.log(`compile "${name}"`);
             const compiler = webpack({
                 entry: {
                     'index': [input]
@@ -45,20 +78,12 @@ module.exports = function after(app) {
                 },
             });
             compiler.run((err, stats) => {
-                console.log(err);
+                if(err) throw err;
                 fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
                     if (err) throw err;
                     res.send(data);
                 });
             });
         }
-
-        else {
-            fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
-                if (err) throw err;
-                res.send(data);
-            });
-        }
-
     });
 };
