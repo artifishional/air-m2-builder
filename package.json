@@ -2,10 +2,10 @@
   "name": "air-m2-builder",
   "version": "0.1.0",
   "description": "",
-  "main": "/lib",
+  "main": "./lib/index.js",
   "scripts": {
-    "postinstall": "npm run build",
-    "build": "webpack --config=webpack.config.js --mode development"
+    "postinstall": "npm run build:module",
+    "build:module": "webpack --config=webpack.config.js --mode development"
   },
   "repository": {
     "type": "git",
