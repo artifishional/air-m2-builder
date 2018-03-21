@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/artifishional/air-m2-builder.git"
   },
+  "bin": {
+    "air-m2-builder": "./bin/server"
+  },
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
