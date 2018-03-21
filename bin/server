@@ -2,4 +2,4 @@
 'use strict';
 
 const {execSync} = require('child_process');
-execSync( "npm run start" );
+execSync( "npm run start", { cwd: "./node_modules/air-m2-builder/" } );

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config=webpack.dist.config.babel.js --mode development"
+    "start": "webpack --config=webpack.dist.config.js --mode development"
   },
   "repository": {
     "type": "git",
