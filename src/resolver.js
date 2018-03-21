@@ -1,89 +1,97 @@
-const path = require("path");
-const {m2units} = require("./../../../package.json");
-const fs = require("fs");
-const webpack = require("webpack");
-const {execSync} = require('child_process');
+import path from "path"
+import fs from "fs"
+import webpack from "webpack"
+import {execSync} from "child_process"
+import {Observable} from "air-stream"
 
-module.exports = function after(app) {
-    app.get("/m2units/*", function(req, res) {
+export default function after({ mode, m2units: { units, dir = "/m2units" } }) {
 
-        const name = req.params[0].replace( ".js", "" );
+    return function (app) {
 
-        const output = path.resolve(__dirname, `./../../../node_modules/${name}/m2unit/`);
-        const input = path.resolve(__dirname, `./../../../node_modules/${name}/src/index.js`);
+        app.get("${dir}/*", function(req, res) {
 
-        const module = path.resolve(__dirname, `./../../../node_modules/${name}`);
+            const name = req.params[0].replace( ".js", "" );
 
-        if(!fs.existsSync(module)) {
-            const unit = m2units.hasOwnProperty( name );
-            if(!unit) throw `Requested unit "${name}" is not among m2units`;
+            const output = path.resolve(__dirname, `./../../../node_modules/${name}/m2unit/`);
+            const input = path.resolve(__dirname, `./../../../node_modules/${name}/src/index.js`);
 
-            console.log(`pre install "${m2units[name]}"`, __dirname);
+            const module = path.resolve(__dirname, `./../../../node_modules/${name}`);
 
-            execSync(`npm install ${m2units[name]} --no-save` );
+            if(!fs.existsSync(module)) {
+                const unit = units.find( ({name: _name}) => name === _name );
+                if(!unit) throw `Requested unit "${name}" is not among m2units`;
+
+                console.log(`pre install "${name}"`, __dirname);
+
+                execSync(`npm install ${unit.module} --no-save` );
 
 
-        }
+            }
 
 
-        /*
-                todo needs sync after webpack builder started (Observable)
-                catche.createIfNotExists(name) =>
-                new Observable( function(emt) {
-                    compiler.run((err, stats) => {
-                        if(err) throw err;
-                        emt();
-                    });
-                } );
+            /*
+                    todo needs sync after webpack builder started (Observable)
+                    catche.createIfNotExists(name) =>
+                    new Observable( function(emt) {
+                        compiler.run((err, stats) => {
+                            if(err) throw err;
+                            emt();
+                        });
+                    } );
 
-                on( () => {
+                    on( () => {
 
-                    fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
-                        if (err) throw err;
-                        res.send(data);
-                    });
+                        fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
+                            if (err) throw err;
+                            res.send(data);
+                        });
 
-                } );
+                    } );
 
-        */
+            */
 
-        if(fs.existsSync(`${output}`)) {
-            fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
-                if (err) throw err;
-                res.send(data);
-            });
-        }
-        else {
-            console.log(`compile "${name}"`);
-            const compiler = webpack({
-                entry: {
-                    'index': [input]
-                },
-                output: {
-                    path: output,
-                    filename: "[name].js",
-                    library: "m2unit",
-                    libraryTarget: "this"
-                },
-                module: {
-                    rules: [
-                        {
-                            test: /\.js$/,
-                            exclude: [/node_modules/, /\.loader$/],
-                            use: {
-                                loader: "babel-loader"
-                            }
-                        }
-                    ]
-                },
-            });
-            compiler.run((err, stats) => {
-                if(err) throw err;
+            if(fs.existsSync(`${output}`)) {
                 fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
                     if (err) throw err;
                     res.send(data);
                 });
-            });
-        }
-    });
-};
+            }
+            else {
+                console.log(`compile "${name}"`);
+                const compiler = webpack({
+                    devtool: "(none)",
+                    mode,
+                    entry: {
+                        'index': [input]
+                    },
+                    output: {
+                        path: output,
+                        filename: "[name].js",
+                        library: "m2unit",
+                        libraryTarget: "this"
+                    },
+                    module: {
+                        rules: [
+                            {
+                                test: /\.js$/,
+                                exclude: [/node_modules/, /\.loader$/],
+                                use: {
+                                    loader: "babel-loader"
+                                }
+                            }
+                        ]
+                    },
+                });
+                compiler.run((err) => {
+                    if(err) throw err;
+                    fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
+                        if (err) throw err;
+                        res.send(data);
+                    });
+                });
+            }
+        });
+
+    }
+
+}

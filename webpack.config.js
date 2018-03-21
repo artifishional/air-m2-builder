@@ -1,16 +1,16 @@
 const path = require("path");
-const {name, main} = require("./../../package.json");
-const input = path.resolve(__dirname, `./../../${main}`);
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-    mode: "development",
-    devtool: "source-map",
+    devtool: "(none)",
+    target: 'node',
+    externals: [nodeExternals({ whitelist: ["air-stream"] })],
     entry: {
-        'main': [input]
+        'index': [path.resolve(__dirname, './src/'),]
     },
     output: {
-        path: path.resolve(__dirname, './dist/'),
-        filename: `${name}.js`,
+        path: path.resolve(__dirname, './lib/'),
+        filename: `[name].js`,
     },
     module: {
         rules: [
@@ -23,5 +23,4 @@ module.exports = {
             }
         ]
     },
-    watch: true
 };

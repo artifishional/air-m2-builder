@@ -3,7 +3,7 @@
 
 const WebpackDevServer = require("webpack-dev-server");
 const Webpack = require('webpack');
-const webpackConfig = require('./../webpack.dist.config.js');
+const webpackConfig = require('../src/webpack.config.js');
 const path = require("path");
 const after = require("../src/resolver");
 
