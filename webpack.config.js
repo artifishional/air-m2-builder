@@ -1,4 +1,3 @@
-const path = require("path");
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
@@ -6,10 +5,10 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals({ whitelist: ["air-stream"] })],
     entry: {
-        'index': [path.resolve(__dirname, './src/'),]
+        'index': './src/index.js'
     },
     output: {
-        path: path.resolve(__dirname, './lib/'),
+        path: `${__dirname}/lib`,
         filename: `[name].js`,
     },
     module: {
