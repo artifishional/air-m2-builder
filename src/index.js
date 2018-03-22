@@ -9,7 +9,8 @@ export default class Builder {
                     port = 9000,
                     content: { dir: contentDir = "/dist" } = {},
                     m2units: { dir: m2unitsDir = "/m2units", units = [] } = {},
-                    mode = "development"
+                    mode = "development",
+                    name
     } = {}) {
         const compiler = Webpack({
             devtool: "(none)",
@@ -19,7 +20,7 @@ export default class Builder {
             },
             output: {
                 path: path.resolve(__dirname, './dist/'),
-                filename: `index.js`,
+                filename: `${name}.js`,
             },
             module: {
                 rules: [
@@ -38,7 +39,7 @@ export default class Builder {
             disableHostCheck: true,
             stats: { colors: true, },
             contentBase: path.resolve(__dirname, contentDir ),
-            publicPath: path.resolve(__dirname, m2unitsDir ),
+            publicPath: m2unitsDir,
             hot: true,
             inline: true,
             after: after( { m2units: { units, dir: m2unitsDir}, mode } ),
