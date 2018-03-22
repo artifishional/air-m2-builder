@@ -10,6 +10,7 @@ module.exports = {
     output: {
         path: `${__dirname}/lib`,
         filename: `[name].js`,
+        libraryTarget: "commonjs2",
     },
     module: {
         rules: [

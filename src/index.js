@@ -15,11 +15,11 @@ export default class Builder {
             devtool: "(none)",
             mode,
             entry: {
-                'main': [input]
+                'index': './src/index.js'
             },
             output: {
                 path: path.resolve(__dirname, './dist/'),
-                filename: `${name}.js`,
+                filename: `index.js`,
             },
             module: {
                 rules: [
@@ -48,7 +48,7 @@ export default class Builder {
     }
 
     run() {
-        this.server.listen(this.port, "0.0.0.0", function(err) {
+        this.server.listen(this.port, "0.0.0.0", (err) => {
             if(err) throw err;
             console.log(`Starting server on 0.0.0.0:${this.port}`);
         });
