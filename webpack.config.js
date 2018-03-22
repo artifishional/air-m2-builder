@@ -13,7 +13,7 @@ module.exports = {
         libraryTarget: "commonjs2",
     },
     module: {
-        rules: [
+        /*rules: [
             {
                 test: /\.js$/,
                 exclude: [/node_modules/, /\.loader$/],
@@ -21,6 +21,6 @@ module.exports = {
                     loader: "babel-loader"
                 }
             }
-        ]
+        ]*/
     },
 };

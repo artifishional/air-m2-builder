@@ -8,7 +8,7 @@ export default function after({ mode, m2units: { units, dir = "/m2units" } }) {
 
     return function (app) {
 
-        app.get("${dir}/*", function(req, res) {
+        app.get(`${dir}/*`, function(req, res) {
 
             const name = req.params[0].replace( ".js", "" );
 
