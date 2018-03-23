@@ -8,7 +8,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
 
     return function (app) {
 
-        const {m2units: units} = require("../../../package");
+        const {m2units: units} = eval("require")("../../../package");
 
         app.get(`/${dir}*`, function(req, res) {
 
@@ -26,7 +26,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
                 if(!unit) throw `Requested unit "${name}" is not among m2units`;
                 console.log(`preinstall "${name}"`, dirname);
                 execSync(`npm install ${unit.npm} --no-save` );
-                units.push(...require(`../../../node_modules/${unit.npm}/package`) || []);
+                units.push(...eval("require")(`../../../node_modules/${unit.npm}/package`) || []);
             }
 
 
