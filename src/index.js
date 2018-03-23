@@ -9,10 +9,11 @@ export default class Builder {
                     dirname,
                     port = 9000,
                     content: { dir: contentDir = "/dist" } = {},
-                    m2units: { dir: m2unitsDir = "/m2units", units = [] } = {},
+                    m2units: { dir: m2unitsDir = "m2units/", } = {},
                     mode = "development",
                     name
     } = {}) {
+
         const compiler = Webpack({
             devtool: "(none)",
             mode,
@@ -43,7 +44,7 @@ export default class Builder {
             publicPath: m2unitsDir,
             hot: true,
             inline: true,
-            after: after( { dirname, m2units: { units, dir: m2unitsDir}, mode } ),
+            after: after( { dirname, m2units: { dir: m2unitsDir}, mode } ),
             watchContentBase: true
         });
         this.port = port;
