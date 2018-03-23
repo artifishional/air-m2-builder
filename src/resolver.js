@@ -4,7 +4,7 @@ import webpack from "webpack"
 import {execSync} from "child_process"
 import {Observable} from "air-stream"
 
-export default function after({ mode, m2units: { units, dir = "/m2units" } }) {
+export default function after({ dirname, mode, m2units: { units, dir = "/m2units" } }) {
 
     return function (app) {
 
@@ -12,16 +12,16 @@ export default function after({ mode, m2units: { units, dir = "/m2units" } }) {
 
             const name = req.params[0].replace( ".js", "" );
 
-            const output = path.resolve(__dirname, `./../../../node_modules/${name}/m2unit/`);
-            const input = path.resolve(__dirname, `./../../../node_modules/${name}/src/index.js`);
+            const output = path.resolve(dirname, `./../../../node_modules/${name}/m2unit/`);
+            const input = path.resolve(dirname, `./../../../node_modules/${name}/src/index.js`);
 
-            const module = path.resolve(__dirname, `./../../../node_modules/${name}`);
+            const module = path.resolve(dirname, `./../../../node_modules/${name}`);
 
             if(!fs.existsSync(module)) {
                 const unit = units.find( ({name: _name}) => name === _name );
                 if(!unit) throw `Requested unit "${name}" is not among m2units`;
 
-                console.log(`pre install "${name}"`, __dirname);
+                console.log(`pre install "${name}"`, dirname);
 
                 execSync(`npm install ${unit.npm} --no-save` );
 

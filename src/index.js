@@ -6,6 +6,7 @@ import after from "./resolver"
 export default class Builder {
 
     constructor({
+                    dirname,
                     port = 9000,
                     content: { dir: contentDir = "/dist" } = {},
                     m2units: { dir: m2unitsDir = "/m2units", units = [] } = {},
@@ -19,7 +20,7 @@ export default class Builder {
                 'index': './src/index.js'
             },
             output: {
-                path: path.resolve(__dirname, './dist/'),
+                path: path.resolve(dirname, './dist/'),
                 filename: `${name}.js`,
             },
             module: {
@@ -38,11 +39,11 @@ export default class Builder {
             headers: { "Access-Control-Allow-Origin": "*" },
             disableHostCheck: true,
             stats: { colors: true, },
-            contentBase: path.resolve(__dirname, contentDir ),
+            contentBase: path.resolve(dirname, contentDir ),
             publicPath: m2unitsDir,
             hot: true,
             inline: true,
-            after: after( { m2units: { units, dir: m2unitsDir}, mode } ),
+            after: after( { dirname, m2units: { units, dir: m2unitsDir}, mode } ),
             watchContentBase: true
         });
         this.port = port;
