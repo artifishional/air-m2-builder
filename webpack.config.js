@@ -10,7 +10,8 @@ module.exports = {
     output: {
         path: `${__dirname}/lib`,
         filename: `[name].js`,
-        libraryTarget: "commonjs2",
+        libraryTarget: "this",
+        library: "m2unit"
     },
     module: {
         /*rules: [

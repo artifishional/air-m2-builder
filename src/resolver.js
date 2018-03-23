@@ -23,7 +23,7 @@ export default function after({ mode, m2units: { units, dir = "/m2units" } }) {
 
                 console.log(`pre install "${name}"`, __dirname);
 
-                execSync(`npm install ${unit.module} --no-save` );
+                execSync(`npm install ${unit.npm} --no-save` );
 
 
             }
