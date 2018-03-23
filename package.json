@@ -16,6 +16,7 @@
     "air-m2-builder": "./bin/server"
   },
   "dependencies": {
+    "copy-webpack-plugin": "^4.5.1",
     "webpack-node-externals": "^1.6.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
