@@ -12,9 +12,11 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
 
         app.get(`/${dir}*`, function(req, res) {
 
-            let name = "".match.call(req.params[0], /^([a-z0-9]{1,20}[\-]{0,1}[a-z0-9]{1,20}){1,5}.js$/g);
+            let [name] = "".match.call(
+                req.params[0], /^([a-z0-9]{1,20}[\-]{0,1}[a-z0-9]{1,20}){1,5}.js$/g
+            ) || [];
             if(!name) throw `unexpected module name "${req.params[0]}"`;
-            name = name[0].replace( ".js", "" );
+            name = name.replace( ".js", "" );
 
             const output = path.resolve(dirname, `./../../../node_modules/${name}/m2unit/`);
             const input = path.resolve(dirname, `./../../../node_modules/${name}/src/index.js`);
