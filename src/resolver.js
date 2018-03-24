@@ -26,7 +26,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
                 if(!unit) throw `Requested unit "${name}" is not among m2units`;
                 console.log(`preinstall "${name}"`, dirname);
                 execSync(`npm install ${unit.npm} --no-save` );
-                units.push(...eval("require")(`../../../node_modules/${unit.npm}/package`) || []);
+                units.push(...eval("require")(`../../../node_modules/${name}/package`).m2units || []);
             }
 
 
