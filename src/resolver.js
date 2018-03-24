@@ -26,11 +26,12 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
             if(!fs.existsSync(module)) {
                 const unit = units.find( ({name: _name}) => name === _name );
                 if(!unit) throw `Requested unit "${name}" is not among m2units`;
-                console.log(`preinstall "${name}"`, dirname);
+                console.log(`preinstall "${name}"...`);
                 execSync(`npm install ${unit.npm} --no-save` );
-                units.push(...eval("require")(`../../../node_modules/${name}/package`).m2units || []);
+                console.log(`preinstall "${name}" - ok`);
             }
 
+            units.push(...eval("require")(`../../../node_modules/${name}/package`).m2units || []);
 
             /*
                     todo needs sync after webpack builder started (Observable)
@@ -60,13 +61,14 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
                 });
             }
             else {
-                console.log(`compile "${name}"`);
+                console.log(`compile "${name}"...`);
                 const compiler = webpack({
                     devtool: "(none)",
                     mode,
                     entry: {
                         'index': [input]
                     },
+                    externals: { m2: 'M2' },
                     output: {
                         path: output,
                         filename: "[name].js",
@@ -89,6 +91,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
                     if(err) throw err;
                     fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
                         if (err) throw err;
+                        console.log(`compile "${name}" - ok`);
                         res.send(data);
                     });
                 });
