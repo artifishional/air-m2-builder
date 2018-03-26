@@ -54,7 +54,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
 
             */
 
-            if(fs.existsSync(`${output}`)) {
+            if(fs.existsSync(`${output}/index.js`)) {
                 fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
                     if (err) throw err;
                     res.send(data);
