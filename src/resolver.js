@@ -29,10 +29,14 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
 
                 if(!name) throw `unexpected module name "${req.params[0]}"`;
 
+                name = name.replace( "/index.json", "" );
+
             }
 
-            name = name.replace( ".js", "" );
-            name = name.replace( "/index.json", "" );
+            else {
+                name = name.replace( ".js", "" );
+            }
+
 
             const output = path.resolve(dirname, `./../../../node_modules/${name}/m2unit/`);
             const input =
