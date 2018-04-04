@@ -1,4 +1,4 @@
-export default ({input, mode}) => ({
+export default ({input, mode, output}) => ({
     devtool: "(none)",
         mode,
         entry: {

@@ -86,7 +86,7 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
                 }
                 else {
                     console.log(`compile "${name}"...`);
-                    const compiler = webpack(m2builderConf({input, mode}));
+                    const compiler = webpack(m2builderConf({input, mode, output}));
                     compiler.run((err) => {
                         if(err) throw err;
                         fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
