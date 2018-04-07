@@ -1,6 +1,6 @@
 {
   "name": "air-m2-builder",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
