@@ -17,13 +17,13 @@ export default class Builder {
 
 
 
-        const compiler = Webpack(m2builderConf);
-        this.server = new WebpackDevServer(compiler( {
+        const compiler = Webpack(m2builderConf( {
             name,
             mode,
             input: "./src/index.js",
             output: path.resolve(dirname, './dist/'),
-        } ), {
+        } ));
+        this.server = new WebpackDevServer(compiler( ), {
             headers: { "Access-Control-Allow-Origin": "*" },
             disableHostCheck: true,
             stats: { colors: true, },
