@@ -15,6 +15,8 @@ export default class Builder {
                     name
     } = {}) {
 
+
+
         const compiler = Webpack(m2builderConf);
         this.server = new WebpackDevServer(compiler( {
             name,

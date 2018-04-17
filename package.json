@@ -4,7 +4,7 @@
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
-    "preversion": "npm run build:module",
+    "preversion": "npm run build:module && git add -A dist",
     "patch": "npm version patch && npm publish && git push origin",
     "build:module": "webpack --config=webpack.config.js --mode development"
   },
