@@ -23,7 +23,7 @@ export default class Builder {
             input: "./src/index.js",
             output: path.resolve(dirname, './dist/'),
         } ));
-        this.server = new WebpackDevServer(compiler( ), {
+        this.server = new WebpackDevServer(compiler, {
             headers: { "Access-Control-Allow-Origin": "*" },
             disableHostCheck: true,
             stats: { colors: true, },
