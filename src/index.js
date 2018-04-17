@@ -41,7 +41,7 @@ export default class Builder {
             disableHostCheck: true,
             stats: { colors: true, },
             contentBase: path.resolve(dirname, contentDir ),
-            publicPath: m2unitsDir,
+            publicPath: `/${m2unitsDir}`,
             hot: true,
             inline: true,
             after: after( { dirname, m2units: { dir: m2unitsDir}, mode } ),
