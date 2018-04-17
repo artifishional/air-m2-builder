@@ -9,7 +9,6 @@ export default function after({ dirname, mode, m2units: { units, dir = "m2units/
 
     return function (app) {
 
-
         const {m2units: units} = eval("require")("../../../package");
 
         app.get(`/${dir}*`, function(req, res) {
