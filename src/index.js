@@ -2,6 +2,7 @@ import WebpackDevServer from "webpack-dev-server"
 import Webpack from "webpack"
 import path from "path"
 import after from "./resolver"
+import m2builderConf from "../webpack.m2builder.config.js"
 
 export default class Builder {
 
@@ -14,34 +15,20 @@ export default class Builder {
                     name
     } = {}) {
 
-        const compiler = Webpack({
-            devtool: "(none)",
+
+
+        const compiler = Webpack(m2builderConf( {
+            name,
             mode,
-            entry: {
-                'index': './src/index.js'
-            },
-            output: {
-                path: path.resolve(dirname, './dist/'),
-                filename: `${name}.js`,
-            },
-            module: {
-                rules: [
-                    {
-                        test: /\.js$/,
-                        exclude: [/node_modules/, /\.loader$/],
-                        use: {
-                            loader: "babel-loader"
-                        }
-                    }
-                ]
-            }
-        });
+            input: "./src/index.js",
+            output: path.resolve(dirname, './dist/'),
+        } ));
         this.server = new WebpackDevServer(compiler, {
             headers: { "Access-Control-Allow-Origin": "*" },
             disableHostCheck: true,
             stats: { colors: true, },
             contentBase: path.resolve(dirname, contentDir ),
-            publicPath: m2unitsDir,
+            publicPath: `/${m2unitsDir}`,
             hot: true,
             inline: true,
             after: after( { dirname, m2units: { dir: m2unitsDir}, mode } ),

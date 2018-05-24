@@ -1,4 +1,4 @@
-export default ({input, mode, output}) => ({
+export default ({input, mode, output, name = `[name]`}) => ({
     devtool: "(none)",
         mode,
         entry: {
@@ -7,7 +7,7 @@ export default ({input, mode, output}) => ({
     externals: { m2: 'M2' },
     output: {
         path: output,
-            filename: "[name].js",
+            filename: `${name}.js`,
             library: "m2unit",
             libraryTarget: "this"
     },
