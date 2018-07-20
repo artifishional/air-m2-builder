@@ -43,13 +43,13 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                         m2mode = "res";
 
                         [name] = "".match.call(
-                            req.params[0], /^[a-z0-9_\-]{1,25}\/res(\/[a-z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g
+                            req.params[0], /^[a-z0-9_\-]{1,25}\/res(\/[a-zA-Z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g
                         ) || [];
 
                         if (!name) throw `unexpected module request "${req.params[0]}"`;
 
                         [name] = "".match.call(req.params[0], /^[a-z\-_0-9]{1,25}/g) || [];
-                        [m2file] = "".match.call(req.params[0], /res(\/[a-z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g) || [];
+                        [m2file] = "".match.call(req.params[0], /res(\/[a-zA-Z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g) || [];
                         m2file = m2file.replace(/^res/, "");
 
                         if (!name) throw `unexpected module name "${req.params[0]}"`;
@@ -151,7 +151,14 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                 });
             }
             else if (m2mode === "res") {
-                if(/.css$/g.test(input)) {
+                if(/.svg$/g.test(input)) {
+                    fs__WEBPACK_IMPORTED_MODULE_1___default.a.readFile(`${input}`, "utf8", (err, data) => {
+                        if (err) throw err;
+                        res.type('image/svg+xml');
+                        res.send(data);
+                    });
+                }
+                else if(/.css$/g.test(input)) {
                     fs__WEBPACK_IMPORTED_MODULE_1___default.a.readFile(`${input}`, "utf8", (err, data) => {
                         if (err) throw err;
                         res.type('text/css');
