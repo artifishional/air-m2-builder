@@ -10,7 +10,7 @@ export default ({input, mode, output, name = `[name]`}) => ({
             filename: `${name}.js`,
             library: "m2unit",
             libraryTarget: "this"
-    },
+    },/*
     module: {
         rules: [
             {
@@ -21,5 +21,5 @@ export default ({input, mode, output, name = `[name]`}) => ({
                 }
             }
         ]
-    },
+    },*/
 })
