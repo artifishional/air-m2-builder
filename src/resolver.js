@@ -16,6 +16,7 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
             let m2mode = "js";
             let name;
             let fname;
+            let catalog;
             let m2file;
             let _;
 
@@ -27,8 +28,8 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
 
                 m2mode = "json";
 
-                [_, name, fname] = "".match.call(
-                    req.params[0], /^([a-z0-9\-]{1,100})\/([a-z0-9]{1,20})\.json$/
+                [_, name, catalog, _, fname] = "".match.call(
+                    req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,25}){0,7})\/([a-z0-9]{1,20})\.json$/
                 ) || [];
 
 
@@ -36,8 +37,8 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
 
                     m2mode = "html";
 
-                    [name] = "".match.call(
-                        req.params[0], /^([a-z0-9]{1,20}[\-_]{0,1}[a-z0-9]{1,20}){1,5}\/index\.html/g
+                    [_, name, catalog, _, fname] = "".match.call(
+                        req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,25}){0,7})\/([a-z0-9]{1,20})\.html$/
                     ) || [];
 
                     if (!name) {
@@ -81,8 +82,8 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                 path.resolve(dirname,
                     `./../../../node_modules/${name}/src/${
                         m2mode === "js" ? "index.js" :
-                            m2mode === "json" ? fname + ".json" :
-                                m2mode === "html" ? "index.html" :
+                            m2mode === "json" ? catalog  + "/" + fname + ".json" :
+                                m2mode === "html" ? catalog + "/index.html" :
                                     "../res" + m2file
                         }`
                 );
