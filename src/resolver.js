@@ -21,7 +21,7 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
             let _;
 
             [name] = "".match.call(
-                req.params[0], /^([a-z0-9]{1,20}[\-_]{0,1}[a-z0-9]{1,20}){1,5}\.js$/g
+                req.params[0], /^([a-z0-9]{1,20}[\-_]{0,1}[a-z0-9]{1,50}){1,5}\.js$/g
             ) || [];
 
             if (!name) {
@@ -29,7 +29,7 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                 m2mode = "json";
 
                 [_, name, catalog, _, fname] = "".match.call(
-                    req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,25}){0,7})\/([a-z0-9]{1,20})\.json$/
+                    req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,50}){0,7})\/([a-z0-9]{1,20})\.json$/
                 ) || [];
 
 
@@ -38,7 +38,7 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                     m2mode = "html";
 
                     [_, name, catalog, _, fname] = "".match.call(
-                        req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,25}){0,7})\/([a-z0-9]{1,20})\.html$/
+                        req.params[0], /^([a-z0-9\-]{1,100})((\/[a-z0-9\-]{1,50}){0,7})\/([a-z0-9]{1,20})\.html$/
                     ) || [];
 
                     if (!name) {
@@ -46,13 +46,13 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                         m2mode = "res";
 
                         [name] = "".match.call(
-                            req.params[0], /^[a-z0-9_\-]{1,25}\/res(\/[a-zA-Z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g
+                            req.params[0], /^[a-z0-9_\-]{1,25}\/res(\/[a-zA-Z0-9\-_]{1,50}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g
                         ) || [];
 
                         if (!name) throw `unexpected module request "${req.params[0]}"`;
 
                         [name] = "".match.call(req.params[0], /^[a-z\-_0-9]{1,25}/g) || [];
-                        [m2file] = "".match.call(req.params[0], /res(\/[a-zA-Z0-9\-_]{1,25}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g) || [];
+                        [m2file] = "".match.call(req.params[0], /res(\/[a-zA-Z0-9\-_]{1,50}){1,5}(\.[a-z0-9]{2,5}){1,4}$/g) || [];
                         m2file = m2file.replace(/^res/, "");
 
                         if (!name) throw `unexpected module name "${req.params[0]}"`;
