@@ -2,14 +2,27 @@ import path from "path"
 import fs from "fs"
 import webpack from "webpack"
 import {execSync} from "child_process"
-import {Observable} from "air-stream"
+import pkg from "../../../package"
+const units = [];
+
+if (fs.existsSync("./m2units.json")) {
+    let m2units = JSON.parse(fs.readFileSync("./m2units.json", "utf8"));
+    m2units = Object.keys(m2units).map( key => ({ name: key, npm: m2units[key] }) );
+    units.push(...m2units);
+}
+
+let {m2units = [], name: curname} = pkg;
+
+if(typeof m2units === "object" && !Array.isArray(m2units)) {
+    m2units = Object.keys(m2units).map( key => ({ name: key, npm: m2units[key] }) );
+}
+units.push(...m2units);
+
 import m2builderConf from "../webpack.m2builder.config"
 
-export default function after({dirname, mode, m2units: {units, dir = "m2units/"}}) {
+export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
 
     return function (app) {
-
-        const {m2units: units} = eval("require")("../../../package");
 
         app.get(`/${dir}*`, function(req, res) {
 
@@ -77,49 +90,51 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
                 name = name.replace(".js", "");
             }
 
-            const output = path.resolve(dirname, `./../../../node_modules/${name}/m2unit/`);
-            const input =
-                path.resolve(dirname,
-                    `./../../../node_modules/${name}/src/${
+            let input;
+
+            const output = path.resolve(dirname, `./node_modules/${name}/m2unit/`);
+
+            const issame = curname === name;
+
+            if(issame) {
+                input = path.resolve(dirname,
+                    `./src/${
                         m2mode === "js" ? "index.js" :
                             m2mode === "json" ? catalog  + "/" + fname + ".json" :
                                 m2mode === "html" ? catalog + "/index.html" :
                                     "../res" + m2file
                         }`
                 );
+            }
 
-            const module = path.resolve(dirname, `./../../../node_modules/${name}`);
+            else {
+                input = path.resolve(dirname,
+                    `./node_modules/${name}/src/${
+                        m2mode === "js" ? "index.js" :
+                            m2mode === "json" ? catalog  + "/" + fname + ".json" :
+                                m2mode === "html" ? catalog + "/index.html" :
+                                    "../res" + m2file
+                        }`
+                );
+            }
 
-            if (!fs.existsSync(module)) {
+            const module = path.resolve(dirname, `./node_modules/${name}`);
+
+            if (!issame && !fs.existsSync(module)) {
                 const unit = units.find(({name: _name}) => name === _name);
                 if (!unit) throw `Requested unit "${name}" is not among m2units`;
-                console.log(`preinstall "${name}"...`);
+                console.log(`preinstall "${name}" from ${unit.npm} ...`);
                 execSync(`npm install ${unit.npm} --no-save`);
                 console.log(`preinstall "${name}" - ok`);
             }
 
-            units.push(...eval("require")(`../../../node_modules/${name}/package`).m2units || []);
-
-            /*
-                    todo needs sync after webpack builder started (Observable)
-                    catche.createIfNotExists(name) =>
-                    new Observable( function(emt) {
-                        compiler.run((err, stats) => {
-                            if(err) throw err;
-                            emt();
-                        });
-                    } );
-
-                    on( () => {
-
-                        fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
-                            if (err) throw err;
-                            res.send(data);
-                        });
-
-                    } );
-
-            */
+            if(!issame) {
+                let { m2units = [] } = JSON.parse(fs.readFileSync(`./node_modules/${name}/package.json`, "utf8"));
+                if(typeof m2units === "object" && !Array.isArray(m2units)) {
+                    m2units = Object.keys(m2units).map( key => ({ name: key, npm: m2units[key] }) );
+                }
+                units.push(...m2units);
+            }
 
             if (m2mode === "js") {
                 if (fs.existsSync(`${output}/index.js`)) {
@@ -155,14 +170,14 @@ export default function after({dirname, mode, m2units: {units, dir = "m2units/"}
             }
             else if (m2mode === "res") {
                 if(/.svg$/g.test(input)) {
-                    fs__WEBPACK_IMPORTED_MODULE_1___default.a.readFile(`${input}`, "utf8", (err, data) => {
+                    fs.readFile(`${input}`, "utf8", (err, data) => {
                         if (err) throw err;
                         res.type('image/svg+xml');
                         res.send(data);
                     });
                 }
                 else if(/.css$/g.test(input)) {
-                    fs__WEBPACK_IMPORTED_MODULE_1___default.a.readFile(`${input}`, "utf8", (err, data) => {
+                    fs.readFile(`${input}`, "utf8", (err, data) => {
                         if (err) throw err;
                         res.type('text/css');
                         res.send(data);
