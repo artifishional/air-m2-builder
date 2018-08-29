@@ -8,6 +8,9 @@
     "patch": "npm version patch && npm publish && git push origin",
     "build:module": "webpack --config=webpack.config.js --mode development"
   },
+  "engines": {
+    "node": ">=10.6.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/artifishional/air-m2-builder.git"
