@@ -10,7 +10,7 @@ you can override the included submodules
 
 ```json
 { "m2units": {
-      "air-m2": "1.0.0"
+  "air-m2": "1.0.0"
 }}
 ```
 
