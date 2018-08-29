@@ -2,7 +2,7 @@ import WebpackDevServer from "webpack-dev-server"
 import Webpack from "webpack"
 import path from "path"
 import after from "./resolver"
-import m2builderConf from "../webpack.m2builder.config.js"
+import m2builderConf from "../webpack.m2builder.config"
 
 export default class Builder {
 
@@ -14,9 +14,6 @@ export default class Builder {
                     mode = "development",
                     name
     } = {}) {
-
-
-
         const compiler = Webpack(m2builderConf( {
             name,
             mode,

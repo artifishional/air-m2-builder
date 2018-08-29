@@ -1,12 +1,15 @@
 {
   "name": "air-m2-builder",
-  "version": "0.1.35",
+  "version": "0.1.46",
   "description": "",
-  "main": "./lib/index.js",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
   "scripts": {
-    "preversion": "npm run build:module && git add -A lib",
     "patch": "npm version patch && npm publish && git push origin",
     "build:module": "webpack --config=webpack.config.js --mode development"
+  },
+  "engines": {
+    "node": ">=10.6.0"
   },
   "repository": {
     "type": "git",
