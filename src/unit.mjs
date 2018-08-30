@@ -1,7 +1,8 @@
 import { stream } from "air-stream"
 import { exec } from "child_process"
+import fs from "fs"
 
-export default ( { name: selfname, mode = "development", builder } = {} ) => {
+export default ( { units: commonunits = [], name: selfname, mode = "development", builder } = {} ) => {
 
     function _err(err) {
         if (mode === "production") {
@@ -12,7 +13,7 @@ export default ( { name: selfname, mode = "development", builder } = {} ) => {
         }
     }
 
-    const self = stream(emt, ({ request }) => {
+    const self = stream((emt, { request }) => {
 
         let currentStream = stream( emt => {
             fs.readFile(`m2units.json`, "utf8", (err, data) => {
@@ -21,7 +22,7 @@ export default ( { name: selfname, mode = "development", builder } = {} ) => {
                     m2units = Object.keys(m2units).map( key => ({
                         name: key, npm: m2units[key], completed: false, stream: null
                     }) );
-                    item.push(...m2units);
+                    request.exec({request: "add", units: m2units});
                 }
                 fs.readFile(`package.json`, "utf8", (err, data) => {
                     if(err) return _err(err);
@@ -31,7 +32,11 @@ export default ( { name: selfname, mode = "development", builder } = {} ) => {
                             name: key, npm: m2units[key], completed: false, stream: null
                         }) );
                     }
-                    item.push(...m2units);
+                    request.exec({request: "add", units: m2units});
+                    m2units = Object.keys(commonunits).map( key => ({
+                        name: key, npm: commonunits[key], completed: false, stream: null
+                    }) );
+                    request.exec({request: "add", units: m2units});
                     emt(["unit-installed", {type: "source", unit: item[0] }]);
                 });
             });
@@ -80,17 +85,17 @@ export default ( { name: selfname, mode = "development", builder } = {} ) => {
                 currentStream = unit.stream = stream(emt => {
                     orderedStream.at( ([action]) => {
                         if(action !== "unit-installed") return;
-                        console.log(`preinstall "${unit.name}" from ${unit.npm} ...`);
+                        console.log(`preinstall "${name}" from ${unit.npm} ...`);
                         exec(`npm install ${unit.npm} --no-save`, (err) => {
                             if (err) return _err(err);
                             fs.readFile(`./node_modules/${name}/package.json`, "utf8", (err, data) => {
                                 const {main = "", m2units = []} = JSON.parse(data);
                                 request.exec({ request: "add", units: m2units });
-                                if (main.search(/(.js|.mjs)$/)) {
-                                    console.log(`preinstall "${name}" from ${unit.npm} ...`);
-                                    builder({module: `node_modules/${name}`}, (err) => {
+                                if (/(\.js|\.mjs)$/.test(main)) {
+                                    console.log(`build "${name}"`);
+                                    builder(name, (err) => {
                                         if (err) return _err(err);
-                                        console.log(`preinstall "${name}" - ok`);
+                                        console.log(`build "${name}" - ok`);
                                         emt(["unit-installed", {type: "source", unit }]);
                                     });
                                 }
