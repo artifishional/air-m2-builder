@@ -88,20 +88,12 @@ export default ( { units: commonunits = [], name: selfname, mode = "development"
                         console.log(`preinstall "${name}" from ${unit.npm} ...`);
                         exec(`npm install ${unit.npm} --no-save`, (err) => {
                             if (err) return _err(err);
-                            fs.readFile(`./node_modules/${name}/package.json`, "utf8", (err, data) => {
-                                const {main = "", m2units = []} = JSON.parse(data);
-                                request.exec({ request: "add", units: m2units });
-                                if (/(\.js|\.mjs)$/.test(main)) {
-                                    console.log(`build "${name}"`);
-                                    builder(name, (err) => {
-                                        if (err) return _err(err);
-                                        console.log(`build "${name}" - ok`);
-                                        emt(["unit-installed", {type: "source", unit }]);
-                                    });
-                                }
-                                else {
-                                    emt(["unit-installed", { type: "resource", unit }]);
-                                }
+                            console.log(`build "${name}"`);
+                            builder(name, (err, units) => {
+                                if (err) return _err(err);
+                                console.log(`build "${name}" - ok`);
+                                request.exec({ request: "add", units });
+                                emt(["unit-installed", { unit }]);
                             });
                         });
                     });
