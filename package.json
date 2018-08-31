@@ -16,19 +16,20 @@
     "url": "git+https://github.com/artifishional/air-m2-builder.git"
   },
   "dependencies": {
-    "copy-webpack-plugin": "^4.5.2",
-    "webpack-node-externals": "^1.7.2",
+    "air-stream": "^0.5.24",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "copyfiles": "^2.0.0",
     "path": "^0.12.7",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.7",
-    "air-stream": "^0.5.21"
+    "webpack-node-externals": "^1.7.2"
   },
   "author": ".ai",
   "license": "ISC",
