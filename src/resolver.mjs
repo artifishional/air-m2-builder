@@ -102,7 +102,7 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                         m2mode === "js" ? "index.js" :
                             m2mode === "json" ? catalog  + "/" + fname + ".json" :
                                 m2mode === "html" ? catalog + "/index.html" :
-                                    "../res" + m2file
+                                    "/res" + m2file
                         }`
                 );
             }
@@ -113,7 +113,7 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                         m2mode === "js" ? "index.js" :
                             m2mode === "json" ? catalog  + "/" + fname + ".json" :
                                 m2mode === "html" ? catalog + "/index.html" :
-                                    "../res" + m2file
+                                    "/res" + m2file
                         }`
                 );
             }
