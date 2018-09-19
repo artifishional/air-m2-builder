@@ -5,7 +5,7 @@ export default ({input, mode, output, name = `[name]`}) => {
         entry: {
             'index': [input]
         },
-        externals: { m2: 'M2' },
+        externals: { m2: '__M2' },
         output: {
             path: output,
             filename: `${name}.js`,
