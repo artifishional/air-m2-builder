@@ -34,9 +34,9 @@ export default class Production {
                         if(err) return cb(err, []);
                         const {main = "", m2units = []} = JSON.parse(data);
                         const input = `./node_modules/${module}/src/${ "index.js" }`;
-                        const output = path.resolve(dirname, `./dist/m2units/${module}/`);
+                        const output = path.resolve(dirname, `./dist/m2units/`);
                         if (/(\.js|\.mjs)$/.test(main)) {
-                            const compiler = webpack(m2builderConf({input, mode, output}));
+                            const compiler = webpack(m2builderConf({input, mode, output, name: module}));
                             compiler.run((err, data) => {
                                 if (err) throw err;
                                 cb(err, m2units);
