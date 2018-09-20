@@ -8,7 +8,7 @@ export default ({input, mode, output, name = `[name]`}) => {
         externals: { m2: '__M2' },
         output: {
             path: output,
-            filename: `${name}.js`,
+            filename: `${name}/index.js`,
             library: "m2unit",
             libraryTarget: "this"
         },/*

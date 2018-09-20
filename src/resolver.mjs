@@ -33,8 +33,8 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
             let m2file;
             let _;
 
-            [name] = "".match.call(
-                req.params[0], /^([a-z0-9]{1,20}[\-_]{0,1}[a-z0-9]{1,50}){1,5}\.js$/g
+            [_, name] = "".match.call(
+                req.params[0], /^([a-z0-9\-_]{1,100})\/index\.js$/
             ) || [];
 
             if (!name) {
@@ -145,7 +145,7 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                 }
                 else {
                     console.log(`compile "${name}"...`);
-                    const compiler = webpack(m2builderConf({input, mode, output}));
+                    const compiler = webpack(m2builderConf({input, mode, output, name}));
                     compiler.run((err) => {
                         if (err) throw err;
                         fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
