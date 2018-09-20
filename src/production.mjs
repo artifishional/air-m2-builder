@@ -4,7 +4,10 @@ import fs from "fs"
 import webpack from "webpack"
 import m2builderConf from "../webpack.m2builder.config"
 import copyfiles from "copyfiles"
-const resources = [".html", ".json", ".svg", ".png", ".jpg", ".css", ".fnt", ".xml", ".eot", ".ttf", ".woff", ".woff2"];
+const resources = [
+    ".html", ".json", ".svg", ".png", ".jpg", ".css", ".fnt",
+    ".xml", ".eot", ".ttf", ".woff", ".woff2", "mp3", "mp4"
+];
 
 export default class Production {
 
