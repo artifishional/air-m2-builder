@@ -6,7 +6,7 @@ import m2builderConf from "../webpack.m2builder.config"
 import copyfiles from "copyfiles"
 const resources = [
     ".html", ".json", ".svg", ".png", ".jpg", ".css", ".fnt",
-    ".xml", ".eot", ".ttf", ".woff", ".woff2", "mp3", "mp4"
+    ".xml", ".eot", ".ttf", ".woff", ".woff2", ".mp3", ".ogg", ".mp4"
 ];
 
 export default class Production {
