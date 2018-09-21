@@ -20,11 +20,13 @@ units.push(...m2units);
 
 import m2builderConf from "../webpack.m2builder.config"
 
-export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
+export default function after({dirname, mode, units: uts, m2units: {dir: m2unitsdir = "m2units/"}}) {
+
+    units.push(...uts);
 
     return function (app) {
 
-        app.get(`/${dir}*`, function(req, res) {
+        app.get(`/${m2unitsdir}*`, function(req, res) {
 
             let m2mode = "js";
             let name;
@@ -92,6 +94,8 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
 
             let input;
 
+
+            const modules = path.resolve(dirname, `./node_modules/`);
             const output = path.resolve(dirname, `./node_modules/${name}/m2unit/`);
 
             const issame = curname === name;
@@ -144,8 +148,12 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                     });
                 }
                 else {
-                    console.log(`compile "${name}"...`);
-                    const compiler = webpack(m2builderConf({input, mode, output, name}));
+                    const compiler = webpack(m2builderConf({
+                        input,
+                        mode,
+                        output: modules,
+                        name: name + "/m2unit/"
+                    }));
                     compiler.run((err) => {
                         if (err) throw err;
                         fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
