@@ -20,11 +20,13 @@ units.push(...m2units);
 
 import m2builderConf from "../webpack.m2builder.config"
 
-export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
+export default function after({dirname, mode, units: uts, m2units: {dir: m2unitsdir = "m2units/"}}) {
+
+    units.push(...uts);
 
     return function (app) {
 
-        app.get(`/${dir}*`, function(req, res) {
+        app.get(`/${m2unitsdir}*`, function(req, res) {
 
             let m2mode = "js";
             let name;
@@ -33,8 +35,8 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
             let m2file;
             let _;
 
-            [name] = "".match.call(
-                req.params[0], /^([a-z0-9]{1,20}[\-_]{0,1}[a-z0-9]{1,50}){1,5}\.js$/g
+            [_, name] = "".match.call(
+                req.params[0], /^([a-z0-9\-_]{1,100})\/index\.js$/
             ) || [];
 
             if (!name) {
@@ -92,6 +94,8 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
 
             let input;
 
+
+            const modules = path.resolve(dirname, `./node_modules/`);
             const output = path.resolve(dirname, `./node_modules/${name}/m2unit/`);
 
             const issame = curname === name;
@@ -102,7 +106,7 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                         m2mode === "js" ? "index.js" :
                             m2mode === "json" ? catalog  + "/" + fname + ".json" :
                                 m2mode === "html" ? catalog + "/index.html" :
-                                    "../res" + m2file
+                                    "/res" + m2file
                         }`
                 );
             }
@@ -113,7 +117,7 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                         m2mode === "js" ? "index.js" :
                             m2mode === "json" ? catalog  + "/" + fname + ".json" :
                                 m2mode === "html" ? catalog + "/index.html" :
-                                    "../res" + m2file
+                                    "/res" + m2file
                         }`
                 );
             }
@@ -144,8 +148,12 @@ export default function after({dirname, mode, m2units: {dir = "m2units/"}}) {
                     });
                 }
                 else {
-                    console.log(`compile "${name}"...`);
-                    const compiler = webpack(m2builderConf({input, mode, output}));
+                    const compiler = webpack(m2builderConf({
+                        input,
+                        mode,
+                        output: modules,
+                        name: name + "/m2unit/"
+                    }));
                     compiler.run((err) => {
                         if (err) throw err;
                         fs.readFile(`${output}/index.js`, "utf8", (err, data) => {
