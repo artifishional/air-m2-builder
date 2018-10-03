@@ -1,5 +1,5 @@
 import { stream } from "air-stream"
-import { exec } from "child_process"
+import exec from "./install.mjs"
 import fs from "fs"
 
 export default ( { units: commonunits = [], name: selfname, mode = "development", builder } = {} ) => {
@@ -80,25 +80,20 @@ export default ( { units: commonunits = [], name: selfname, mode = "development"
                 if (!unit) {
                     return _err(`requested unit "${name}" is not among m2units`);
                 }
-                if (unit.stream) return;
-                const orderedStream = currentStream;
-                currentStream = unit.stream = stream(emt => {
-                    orderedStream.at( ([action]) => {
-                        if(action !== "unit-installed") return;
-                        console.log(`preinstall "${name}" from ${unit.npm} ...`);
-                        exec(`npm install ${unit.npm} --no-save`, (err) => {
-                            if (err) return _err(err);
-                            console.log(`build "${name}"`);
-                            builder(name, (err, units) => {
-                                if (err) return _err(err);
-                                console.log(`build "${name}" - ok`);
-                                request.exec({ request: "add", units });
-                                emt(["unit-installed", { unit }]);
-                            });
-                        });
+
+                console.log(`preinstall "${name}" from ${unit.npm} ...`);
+                exec(unit, (err) => {
+                    console.log("installed", err);
+                    if (err) return _err(err);
+                    console.log(`build "${name}"`);
+                    builder(name, (err, units) => {
+                        if (err) return _err(err);
+                        console.log(`build "${name}" - ok`);
+                        request.exec({ request: "add", units });
+                        emt(["unit-installed", { unit }]);
                     });
                 });
-                currentStream.at( emt );
+
             }
 
         });
