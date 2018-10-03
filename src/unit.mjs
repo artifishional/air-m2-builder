@@ -80,20 +80,18 @@ export default ( { units: commonunits = [], name: selfname, mode = "development"
                 if (!unit) {
                     return _err(`requested unit "${name}" is not among m2units`);
                 }
-
                 console.log(`preinstall "${name}" from ${unit.npm} ...`);
                 exec(unit, (err) => {
-                    console.log("installed", err);
                     if (err) return _err(err);
                     console.log(`build "${name}"`);
                     builder(name, (err, units) => {
                         if (err) return _err(err);
                         console.log(`build "${name}" - ok`);
                         request.exec({ request: "add", units });
+                        console.log("unit-installed", unit.npm);
                         emt(["unit-installed", { unit }]);
                     });
                 });
-
             }
 
         });

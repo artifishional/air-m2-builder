@@ -30,7 +30,6 @@ export default class Production {
                 err => {
                     if(err) return cb(err, []);
                     fs.readFile(`./node_modules/${module}/package.json`, "utf8", (err, data) => {
-                        console.log(err);
                         if(err) return cb(err, []);
                         const {main = "", m2units = []} = JSON.parse(data);
                         const input = `./node_modules/${module}/src/${ "index.js" }`;
@@ -49,7 +48,7 @@ export default class Production {
                 });
             }});
         const hook = _units.at( (evt) => {
-            console.log(evt);
+            //console.log(evt);
         } );
         setImmediate( () => {
             hook( {request: "collect"} );
