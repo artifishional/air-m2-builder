@@ -36,7 +36,6 @@ export default function after({
         app.get(`/${m2unitsdir}*`, function(req, res) {
 
 
-            let debug = false;
             let m2mode = "js";
             let name;
             let fname;
@@ -105,22 +104,13 @@ export default function after({
 
             if(name === "master") {
 
-                const proxy = req.headers.referer + req.url
-                    .substring(1)
-                    .replace("master", master);
-                console.log("proxy", proxy);
+                const proxy = "http://" + req.headers.host + req.url.replace("master", master);
 
                 return http.get(proxy, resp => {
                     let data = '';
                     resp.on('data', chunk => data += chunk );
                     resp.on('end', () => res.send(data) );
                 }).on("error", console.log );
-
-            }
-
-            if(name === "debug") {
-
-                debug = true;
 
             }
 
@@ -131,7 +121,7 @@ export default function after({
 
             if(issame) {
 
-                if(debug) {
+                if(name === "debug") {
 
                     //only for static
                     input = path.resolve(dirname,
