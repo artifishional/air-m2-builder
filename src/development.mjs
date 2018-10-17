@@ -7,7 +7,9 @@ import m2builderConf from "../webpack.m2builder.config"
 export default class Builder {
 
     constructor({
+        debug,
         units = [],
+        master = "master",
         dirname,
         port = 9000,
         content: { dir: contentDir = "/dist" } = {},
@@ -16,6 +18,7 @@ export default class Builder {
         name
     } = {}) {
         const compiler = Webpack(m2builderConf( {
+            debug,
             name,
             mode,
             input: "./src/index.js",
@@ -29,7 +32,7 @@ export default class Builder {
             publicPath: `/${m2unitsDir}`,
             hot: true,
             inline: true,
-            after: after( { units, dirname, m2units: { dir: m2unitsDir}, mode } ),
+            after: after( { master, units, dirname, m2units: { dir: m2unitsDir}, mode } ),
             watchContentBase: true
         });
         this.port = port;
