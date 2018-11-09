@@ -19,9 +19,8 @@ if(typeof m2units === "object" && !Array.isArray(m2units)) {
 }
 units.push(...m2units);
 
-import m2builderConf from "../webpack.m2builder.config"
-
 export default function after({
+                                  m2builderConf,
                                   master,
                                   dirname,
                                   mode,
