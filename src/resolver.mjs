@@ -4,6 +4,7 @@ import webpack from "webpack"
 import {execSync} from "child_process"
 import pkg from "../../../package"
 const units = [];
+import http from "http"
 
 if (fs.existsSync("./m2units.json")) {
     let m2units = JSON.parse(fs.readFileSync("./m2units.json", "utf8"));
@@ -18,15 +19,21 @@ if(typeof m2units === "object" && !Array.isArray(m2units)) {
 }
 units.push(...m2units);
 
-import m2builderConf from "../webpack.m2builder.config"
-
-export default function after({dirname, mode, units: uts, m2units: {dir: m2unitsdir = "m2units/"}}) {
+export default function after({
+                                  m2builderConf,
+                                  master,
+                                  dirname,
+                                  mode,
+                                  units: uts,
+                                  m2units: {dir: m2unitsdir = "m2units/"}
+}) {
 
     units.push(...uts);
 
     return function (app) {
 
         app.get(`/${m2unitsdir}*`, function(req, res) {
+
 
             let m2mode = "js";
             let name;
@@ -94,21 +101,51 @@ export default function after({dirname, mode, units: uts, m2units: {dir: m2units
 
             let input;
 
+            if(name === "master") {
+
+                const proxy = "http://" + req.headers.host + req.url.replace("master", master);
+
+                return http.get(proxy, resp => {
+                    let data = '';
+                    resp.on('data', chunk => data += chunk );
+                    resp.on('end', () => res.send(data) );
+                }).on("error", console.log );
+
+            }
 
             const modules = path.resolve(dirname, `./node_modules/`);
             const output = path.resolve(dirname, `./node_modules/${name}/m2unit/`);
 
-            const issame = curname === name;
+            const issame = curname === name || name === "debug";
 
             if(issame) {
-                input = path.resolve(dirname,
-                    `./src/${
-                        m2mode === "js" ? "index.js" :
-                            m2mode === "json" ? catalog  + "/" + fname + ".json" :
-                                m2mode === "html" ? catalog + "/index.html" :
-                                    "/res" + m2file
-                        }`
-                );
+
+                if(name === "debug") {
+
+                    //only for static
+                    input = path.resolve(dirname,
+                        `./debug/src/${
+                            m2mode === "js" ? "index.js" :
+                                m2mode === "json" ? catalog  + "/" + fname + ".json" :
+                                    m2mode === "html" ? catalog + "/index.html" :
+                                        "/res" + m2file
+                            }`
+                    );
+
+                }
+
+                else {
+
+                    input = path.resolve(dirname,
+                        `./src/${
+                            m2mode === "js" ? "index.js" :
+                                m2mode === "json" ? catalog  + "/" + fname + ".json" :
+                                    m2mode === "html" ? catalog + "/index.html" :
+                                        "/res" + m2file
+                            }`
+                    );
+
+                }
             }
 
             else {

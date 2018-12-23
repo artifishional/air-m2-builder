@@ -2,7 +2,7 @@ import path from "path"
 import unitsstream from "./unit"
 import fs from "fs"
 import webpack from "webpack"
-import m2builderConf from "../webpack.m2builder.config"
+import m2builderConfDefault from "../webpack.m2builder.config"
 import copyfiles from "copyfiles"
 const resources = [
     ".html", ".json", ".svg", ".png", ".jpg", ".css", ".fnt",
@@ -15,6 +15,7 @@ export default class Production {
             units,
             dirname = path.resolve(),
             port = 9000,
+            m2builderConf = m2builderConfDefault,
             content: { dir: contentDir = "/dist" } = {},
             m2units: { dir: m2unitsDir = "m2units/", } = {},
             mode = "production",
@@ -30,7 +31,6 @@ export default class Production {
                 err => {
                     if(err) return cb(err, []);
                     fs.readFile(`./node_modules/${module}/package.json`, "utf8", (err, data) => {
-                        console.log(err);
                         if(err) return cb(err, []);
                         const {main = "", m2units = []} = JSON.parse(data);
                         const input = `./node_modules/${module}/src/${ "index.js" }`;
@@ -49,7 +49,7 @@ export default class Production {
                 });
             }});
         const hook = _units.at( (evt) => {
-            console.log(evt);
+            //console.log(evt);
         } );
         setImmediate( () => {
             hook( {request: "collect"} );
