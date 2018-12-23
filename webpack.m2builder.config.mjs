@@ -16,7 +16,7 @@ export default ({input, mode, output, name = `[name]`, debug = false }) => {
         output: {
             path: output,
             filename: `[name]/index.js`,
-            library: "m2unit",
+            library: "__m2unit__",
             libraryTarget: "this"
         },/*
     module: {
