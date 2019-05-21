@@ -1,8 +1,8 @@
 import path from "path"
-import unitsstream from "./unit"
+import unitsstream from "./unit.mjs"
 import fs from "fs"
 import webpack from "webpack"
-import m2builderConfDefault from "../webpack.m2builder.config"
+import m2builderConfDefault from "../webpack.m2builder.config.mjs"
 import copyfiles from "copyfiles"
 const resources = [
     ".html", ".json", ".svg", ".png", ".jpg", ".css", ".fnt",

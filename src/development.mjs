@@ -1,8 +1,8 @@
 import WebpackDevServer from "webpack-dev-server"
 import Webpack from "webpack"
 import path from "path"
-import after from "./resolver"
-import m2builderConfDefault from "../webpack.m2builder.config"
+import after from "./resolver.mjs"
+import m2builderConfDefault from "../webpack.m2builder.config.mjs"
 
 export default class Builder {
 

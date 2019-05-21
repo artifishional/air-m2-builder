@@ -2,7 +2,7 @@ import path from "path"
 import fs from "fs"
 import webpack from "webpack"
 import {execSync} from "child_process"
-import pkg from "../../../package"
+import pkg from "../../../package.json"
 const units = [];
 import http from "http"
 
